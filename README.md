@@ -20,15 +20,15 @@ This is an example of the expected integration, but feel free to let your imagin
 
 - TypeScript and Tailwind must be used
 - The project is expected to have some UI/UX integration and best practices applied
-- You shouldn't need to add any library (except if you have a very good reason to do so)
+- You shouldn't need to add any library, except if you have a good reason to do so (like eslint plugins for example)
 - Mock must not be changed
 
 The following features are expected to be in the technical assessment : 
 
-- Create an API endpoint /search to get the list of users (mock provided)
+- Create an API endpoint /users to get the list of users (mock provided)
 - Display users
 - Add a searchbar to filter users
-- Update user name (without using api)
+- Update user name
 - Add pagination (10 users per page)
 - Add alphabetical sort 
 - Loading state
