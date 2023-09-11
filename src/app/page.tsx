@@ -1,12 +1,16 @@
+import { getUsers } from "@/actions/get-users";
 import Container from "@/components/container";
-import { Heading } from "@/components/heading";
+import ListOfUsers from "@/components/list-of-users";
 
-const App = () => (
-  <div data-testid="appContainer">
-    <Container>
-      <Heading title="Users" description="A list of all users" />
-    </Container>
-  </div>
-);
+const App = async () => {
+  const users = await getUsers();
+  return (
+    <div data-testid="appContainer">
+      <Container>
+        <ListOfUsers data={users} />
+      </Container>
+    </div>
+  );
+}
 
 export default App;

@@ -1,6 +1,6 @@
 import fetchMock from "jest-fetch-mock";
 import { getUsers } from "@/actions/get-users";
-import { User } from "@/types";
+import { User, UserType } from "@/types";
 
 fetchMock.enableMocks();
 
@@ -15,7 +15,7 @@ describe("getUsers", () => {
         name: "User1",
         email: "user1@example.com",
         id: 1,
-        type: "admin",
+        type: UserType.admin,
       },
     ];
 
@@ -24,7 +24,7 @@ describe("getUsers", () => {
     const users = await getUsers();
 
     expect(users).toEqual(mockUserData);
-    expect(fetchMock).toHaveBeenCalledWith("/api/users");
+    expect(fetchMock).toHaveBeenCalledWith(process.env.API_URL as string);
   });
 
   it("handles non-OK response", async () => {
@@ -36,7 +36,7 @@ describe("getUsers", () => {
       expect(error).toEqual(new Error("Failed to fetch data: 404 - Not Found"));
     }
 
-    expect(fetchMock).toHaveBeenCalledWith("/api/users");
+    expect(fetchMock).toHaveBeenCalledWith(process.env.API_URL as string);
   });
 
   it("handles unexpected response format", async () => {
@@ -50,7 +50,7 @@ describe("getUsers", () => {
       );
     }
 
-    expect(fetchMock).toHaveBeenCalledWith("/api/users");
+    expect(fetchMock).toHaveBeenCalledWith(process.env.API_URL as string);
   });
 
   it("handles fetch errors", async () => {
@@ -62,6 +62,6 @@ describe("getUsers", () => {
       expect(error).toEqual(new Error("Network error"));
     }
 
-    expect(fetchMock).toHaveBeenCalledWith("/api/users");
+    expect(fetchMock).toHaveBeenCalledWith(process.env.API_URL as string);
   });
 });
