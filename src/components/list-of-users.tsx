@@ -7,15 +7,26 @@ import Badge from "./badge";
 import { useCallback, useEffect, useState } from "react";
 import { paginate } from "@/utils/pagination";
 import Pagination from "./pagination";
+import ReOrderIcon from "./re-order-icon";
+import { sortUsersByName } from "@/utils/sorting";
 
 interface Props {
   data: User[];
 }
 
 function ListOfUsers({ data }: Props) {
+  const [innerData, setInnerData] = useState<User[]>([]);
   const [userList, setUserList] = useState<User[]>([]);
   const [pageCount, setPageCount] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortingDirection, setSortingDirection] = useState<"ASC" | "DESC">(
+    "ASC"
+  );
+
+  useEffect(
+    () => setInnerData(sortUsersByName(data, sortingDirection)),
+    [data, sortingDirection]
+  );
 
   const onNextPage = useCallback(() => {
     if (currentPage >= pageCount) {
@@ -33,16 +44,28 @@ function ListOfUsers({ data }: Props) {
     setCurrentPage((page) => page - 1);
   }, [currentPage]);
 
-  useEffect(() => {
-    const list = paginate<User>(data, 10, currentPage);
-    setUserList(list);
-  }, [currentPage, data]);
+  const toggleSortingDirection = () =>
+    setSortingDirection((prevDirection) => {
+      if (prevDirection === "ASC") return "DESC";
+      return "ASC";
+    });
+
+  const sortUsers = () => {
+    toggleSortingDirection();
+    const users = sortUsersByName(innerData, sortingDirection);
+    setInnerData(users);
+  };
 
   useEffect(() => {
-    const list = paginate<User>(data, 10, 1);
+    const list = paginate<User>(innerData, 10, currentPage);
     setUserList(list);
-    setPageCount(Math.ceil(data.length / 10));
-  }, [data]);
+  }, [currentPage, innerData]);
+
+  useEffect(() => {
+    const list = paginate<User>(innerData, 10, 1);
+    setUserList(list);
+    setPageCount(Math.ceil(innerData.length / 10));
+  }, [innerData]);
 
   return (
     <>
@@ -58,7 +81,10 @@ function ListOfUsers({ data }: Props) {
                 Email
               </th>
               <th scope="col" className="px-6 py-3">
-                Name
+                <div className="flex items-center">
+                  Name
+                  <ReOrderIcon onClick={sortUsers} />
+                </div>
               </th>
               <th scope="col" className="px-6 py-3">
                 Type
