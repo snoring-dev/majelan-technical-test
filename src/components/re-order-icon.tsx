@@ -8,6 +8,7 @@ function ReOrderIcon({ onClick }: Props) {
   return (
     <a
       href="#"
+      data-testid="sort-users"
       onClick={(e) => {
         e.preventDefault();
         onClick();

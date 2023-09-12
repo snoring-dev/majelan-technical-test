@@ -10,6 +10,7 @@ import Pagination from "./pagination";
 import ReOrderIcon from "./re-order-icon";
 import { sortUsersByName } from "@/utils/sorting";
 import { filterUsersByName } from "@/utils/filter-users";
+import { slugify } from "@/utils/slugify";
 
 interface Props {
   data: User[];
@@ -114,7 +115,9 @@ function ListOfUsers({ data }: Props) {
                     >
                       {u.email}
                     </th>
-                    <td className="px-6 py-4">{u.name}</td>
+                    <td className="px-6 py-4" data-testid={slugify(u.name)}>
+                      {u.name}
+                    </td>
                     <td className="px-6 py-4">
                       <Badge label={u.type} type={u.type} />
                     </td>

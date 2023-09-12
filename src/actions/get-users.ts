@@ -16,7 +16,7 @@ export const getUsers = async (): Promise<User[]> => {
 
     return data as User[];
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    // console.error("Error fetching user data:", error);
     throw error;
   }
 };
