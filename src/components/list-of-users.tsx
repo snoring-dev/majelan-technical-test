@@ -9,6 +9,7 @@ import { paginate } from "@/utils/pagination";
 import Pagination from "./pagination";
 import ReOrderIcon from "./re-order-icon";
 import { sortUsersByName } from "@/utils/sorting";
+import { filterUsersByName } from "@/utils/filter-users";
 
 interface Props {
   data: User[];
@@ -67,11 +68,19 @@ function ListOfUsers({ data }: Props) {
     setPageCount(Math.ceil(innerData.length / 10));
   }, [innerData]);
 
+  const filterUsers = useCallback(
+    (value: string) => {
+      const filtredUsers = filterUsersByName(data, value);
+      setInnerData(filtredUsers);
+    },
+    [data]
+  );
+
   return (
     <>
       <div className="flex items-center justify-between mt-12 mb-6">
         <Heading title="Users" description="A list of all users" />
-        <SearchField />
+        <SearchField onChange={filterUsers} />
       </div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
