@@ -5,7 +5,9 @@ export const getUsers = async (): Promise<User[]> => {
     const resp = await fetch(process.env.API_URL as string);
 
     if (!resp.ok) {
-      throw new Error(`Failed to fetch data: ${resp.status} - ${resp.statusText}`);
+      throw new Error(
+        `Failed to fetch data: ${resp.status} - ${resp.statusText}`
+      );
     }
 
     const data = await resp.json();

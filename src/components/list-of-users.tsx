@@ -1,22 +1,25 @@
 "use client";
 
 import { User } from "@/types";
-import Heading from "./heading";
-import SearchField from "./search-field";
-import Badge from "./badge";
 import { useCallback, useEffect, useState } from "react";
 import { paginate } from "@/utils/pagination";
-import Pagination from "./pagination";
-import ReOrderIcon from "./re-order-icon";
 import { sortUsersByName } from "@/utils/sorting";
 import { filterUsersByName } from "@/utils/filter-users";
 import { slugify } from "@/utils/slugify";
+import { patchUser } from "@/actions/update-user";
+import NameEntry from "./name-entry";
+import Pagination from "./pagination";
+import ReOrderIcon from "./re-order-icon";
+import Heading from "./heading";
+import SearchField from "./search-field";
+import Badge from "./badge";
 
 interface Props {
   data: User[];
 }
 
 function ListOfUsers({ data }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const [innerData, setInnerData] = useState<User[]>([]);
   const [userList, setUserList] = useState<User[]>([]);
   const [pageCount, setPageCount] = useState(1);
@@ -77,6 +80,18 @@ function ListOfUsers({ data }: Props) {
     [data]
   );
 
+  const updateUser = async (id: number, username: string) => {
+    try {
+      setIsLoading(true);
+      await patchUser(id, username);
+      location.reload();
+    } catch (err) {
+      // handle the error here
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="flex items-center justify-between mt-12 mb-6">
@@ -116,7 +131,11 @@ function ListOfUsers({ data }: Props) {
                       {u.email}
                     </th>
                     <td className="px-6 py-4" data-testid={slugify(u.name)}>
-                      {u.name}
+                      <NameEntry
+                        value={u.name}
+                        onUpdate={(username) => updateUser(u.id, username)}
+                        isLoading={isLoading}
+                      />
                     </td>
                     <td className="px-6 py-4">
                       <Badge label={u.type} type={u.type} />

@@ -4,7 +4,7 @@ import ListOfUsers from "@/components/list-of-users";
 import { UserType } from "@/types";
 import "@testing-library/jest-dom/extend-expect";
 
-import { users } from "@/data/mockData";
+import users from "@/data/mockData.json";
 
 describe("ListOfUsers Component", () => {
   const convertTypes = (t: string) => {
