@@ -6,11 +6,16 @@ interface Props {
   value: string;
   visible: boolean;
   isLoading: boolean;
-  onUpdate: (value: string) => void;
+  onUpdate: (value: string, cb: () => void) => void;
 }
 
 function UpdateField({ value, isLoading, visible = false, onUpdate }: Props) {
   const [newValue, setNewValue] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    setIsUpdating(visible);
+  }, [visible]);
 
   useEffect(() => {
     setNewValue(value);
@@ -19,7 +24,7 @@ function UpdateField({ value, isLoading, visible = false, onUpdate }: Props) {
   return (
     <div
       className={`${
-        visible ? "block" : "hidden"
+        isUpdating ? "block" : "hidden"
       } relative mt-2 transition duration-300`}
     >
       <input
@@ -33,7 +38,7 @@ function UpdateField({ value, isLoading, visible = false, onUpdate }: Props) {
       <button
         onClick={(e) => {
           e.preventDefault();
-          onUpdate(newValue);
+          onUpdate(newValue, () => setIsUpdating(false));
         }}
         type="button"
         className="flex items-center text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"

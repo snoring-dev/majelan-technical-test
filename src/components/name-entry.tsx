@@ -6,7 +6,7 @@ import UpdateField from "./update-field";
 interface Props {
   value: string;
   isLoading: boolean;
-  onUpdate: (username: string) => void;
+  onUpdate: (username: string, cb: () => void) => void;
 }
 
 function NameEntry({ value, isLoading, onUpdate }: Props) {

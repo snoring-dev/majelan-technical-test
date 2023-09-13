@@ -80,15 +80,30 @@ function ListOfUsers({ data }: Props) {
     [data]
   );
 
-  const updateUser = async (id: number, username: string) => {
+  const updateUser = async (id: number, username: string, callback: () => void) => {
     try {
       setIsLoading(true);
-      await patchUser(id, username);
-      location.reload();
+      // add some delay to show loading state!
+      // @TODO: delete this in production
+      await new Promise((r) => setTimeout(r, 2000));
+
+      const position = data.findIndex((u) => u.id === id);
+
+      if (position === -1) {
+        throw new Error("User not found");
+      }
+
+      const updatedUsers = [
+        ...data.filter((u) => u.id !== id),
+        { ...data[position], name: username },
+      ];
+
+      setInnerData(sortUsersByName(updatedUsers, sortingDirection));
     } catch (err) {
       // handle the error here
     } finally {
       setIsLoading(false);
+      callback();
     }
   };
 
@@ -133,7 +148,7 @@ function ListOfUsers({ data }: Props) {
                     <td className="px-6 py-4" data-testid={slugify(u.name)}>
                       <NameEntry
                         value={u.name}
-                        onUpdate={(username) => updateUser(u.id, username)}
+                        onUpdate={(username, cb) => updateUser(u.id, username, cb)}
                         isLoading={isLoading}
                       />
                     </td>
